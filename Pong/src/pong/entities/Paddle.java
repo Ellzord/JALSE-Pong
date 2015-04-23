@@ -1,13 +1,19 @@
 package pong.entities;
 
-import jalse.entities.annotations.GetAttribute;
-import jalse.entities.annotations.SetAttribute;
+import java.awt.Point;
+import java.util.UUID;
 
 public interface Paddle extends TableElement {
 
-    @GetAttribute("score")
-    Integer getScore();
+    UUID LEFT_ID = UUID.randomUUID();
 
-    @SetAttribute("score")
-    void setScore(Integer score);
+    UUID RIGHT_ID = UUID.randomUUID();
+
+    default void moveDown() {
+	setMoveDelta(new Point(0, getSpeed()));
+    }
+
+    default void moveUp() {
+	setMoveDelta(new Point(0, -getSpeed()));
+    }
 }

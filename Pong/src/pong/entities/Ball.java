@@ -1,24 +1,20 @@
 package pong.entities;
 
-import jalse.entities.annotations.GetAttribute;
-import jalse.entities.annotations.SetAttribute;
+import java.awt.Point;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public interface Ball extends TableElement {
 
-    enum Direction {
+    UUID ID = UUID.randomUUID();
 
-	RIGHT, LEFT;
+    default void randomMoveLeft() {
+	final int speed = getSpeed();
+	setMoveDelta(new Point(-speed, ThreadLocalRandom.current().nextBoolean() ? -speed : speed));
     }
 
-    @GetAttribute("direction")
-    Direction getDirection();
-
-    @GetAttribute("hits")
-    Integer getHits();
-
-    @SetAttribute("direction")
-    void setDirection(Direction direction);
-
-    @SetAttribute("hits")
-    void setHits(Integer hits);
+    default void randomMoveRight() {
+	final int speed = getSpeed();
+	setMoveDelta(new Point(speed, ThreadLocalRandom.current().nextBoolean() ? -speed : speed));
+    }
 }
