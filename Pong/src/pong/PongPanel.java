@@ -101,20 +101,18 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 
     private void createEntities() {
 	// Create empty score board
-	final ScoreBoard board = jalse.newEntity(ScoreBoard.ID, ScoreBoard.class);
-	board.setLeftScore(0);
-	board.setRightScore(0);
-	board.setLastWinner(ThreadLocalRandom.current().nextBoolean() ? Paddle.LEFT_ID : Paddle.RIGHT_ID);
+	jalse.newEntity(ScoreBoard.ID, ScoreBoard.class);
+	resetScore();
 
 	// Create table
 	final Table table = jalse.newEntity(Table.ID, Table.class);
 	table.setSize(new Dimension(700, 500));
 	// Move the elements
-	table.scheduleForActor(new MoveElements(), 0, 1, TimeUnit.MILLISECONDS);
+	table.scheduleForActor(new MoveElements(), 0, 1000 / 60, TimeUnit.MILLISECONDS);
 
 	// Create paddles
 	final Dimension paddleSize = new Dimension(15, 80);
-	final int paddleSpeed = 20;
+	final int paddleSpeed = 25;
 	final Paddle left = table.newEntity(Paddle.LEFT_ID, Paddle.class);
 	left.setSize(paddleSize);
 	left.setSpeed(paddleSpeed);
@@ -180,12 +178,14 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	    break;
 	case KeyEvent.VK_SPACE:
 	    newGame = true;
+	    resetScore();
 	    break;
 	}
     }
 
     @Override
-    public void keyTyped(final KeyEvent e) {}
+    public void keyTyped(final KeyEvent e) {
+    }
 
     @Override
     protected void paintComponent(final Graphics g) {
@@ -229,6 +229,13 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 
 	// Clean up
 	g.dispose();
+    }
+
+    private void resetScore() {
+	ScoreBoard board = getScoreBoard();
+	board.setLeftScore(0);
+	board.setRightScore(0);
+	board.setLastWinner(ThreadLocalRandom.current().nextBoolean() ? Paddle.LEFT_ID : Paddle.RIGHT_ID);
     }
 
     private void resetBall() {

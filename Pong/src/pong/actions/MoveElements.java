@@ -42,7 +42,6 @@ public class MoveElements implements Action<Entity> {
 	    }
 
 	    final Point newPosition = new Point(x, y);
-	    System.out.println(newPosition);
 
 	    // Check position changed
 	    if (!newPosition.equals(position)) {
