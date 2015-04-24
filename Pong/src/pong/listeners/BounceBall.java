@@ -14,51 +14,50 @@ import pong.entities.Table;
 public class BounceBall extends AttributeAdapter<Point> {
 
     @Override
-    public void attributeChanged(final AttributeEvent<Point> event) {
+    public void attributeAdded(final AttributeEvent<Point> event) {
 	final Ball ball = ((Entity) event.getContainer()).asType(Ball.class);
 	final Table table = ((Entity) ball.getContainer()).asType(Table.class);
 
 	final Dimension ballSize = ball.getSize();
 	final Dimension tableSize = table.getSize();
 
-	final Point position = event.getValue();
-	final Point moveDelta = ball.getMoveDelta();
+	final Point ballPos = event.getValue();
+	final Point ballMoveDelta = ball.getMoveDelta();
 
 	// Off top
-	if (position.getY() <= 0) {
-	    moveDelta.setLocation(moveDelta.getX(), moveDelta.getY() * -1);
-	    position.setLocation(position.getX(), 0);
+	if (ballPos.y == 0) {
+	    ball.setMoveDelta(new Point(ballMoveDelta.x, -ballMoveDelta.y));
 	    return;
 	}
 
 	// Hit bottom
-	if (position.getY() + ballSize.getHeight() >= tableSize.getHeight()) {
-	    moveDelta.setLocation(moveDelta.getX(), moveDelta.getY() * -1);
-	    position.setLocation(position.getX(), tableSize.getHeight() - ballSize.getHeight());
+	if (ballPos.y + ballSize.height == tableSize.height) {
+	    ball.setMoveDelta(new Point(ballMoveDelta.x, -ballMoveDelta.y));
 	    return;
 	}
 
 	// Hit left paddle
 	final Paddle left = table.getLeftPaddle();
-	final double leftFront = left.getSize().getWidth();
-	if (position.getX() <= leftFront && inYBounds(position, ballSize, left)) {
-	    moveDelta.setLocation(moveDelta.getX() * -1 + ball.getSpeed() / 2, moveDelta.getY());
-	    position.setLocation(leftFront, position.getY());
+	final double leftFront = left.getSize().width;
+	if (ballPos.x <= leftFront && inPaddleY(left, ballPos, ballSize)) {
+	    final int xMoveDelta = Math.min(ball.getMaxSpeed(), -ballMoveDelta.x + ball.getSpeed());
+	    ball.setMoveDelta(new Point(xMoveDelta, ballMoveDelta.y));
+	    ballPos.setLocation(leftFront, ballPos.y);
 	    return;
 	}
 
 	// Hit right paddle
 	final Paddle right = table.getRightPaddle();
-	final double rightFront = tableSize.getWidth() - right.getSize().getWidth();
-	if (position.getX() + ballSize.getWidth() >= rightFront && inYBounds(position, ballSize, right)) {
-	    moveDelta.setLocation(moveDelta.getX() * -1 - ball.getSpeed() / 2, moveDelta.getY());
-	    position.setLocation(rightFront - ballSize.getWidth(), position.getY());
+	final double rightFront = tableSize.width - right.getSize().width;
+	if (ballPos.x + ballSize.width >= rightFront && inPaddleY(right, ballPos, ballSize)) {
+	    final int xMoveDelta = Math.max(-ball.getMaxSpeed(), -ballMoveDelta.x - ball.getSpeed());
+	    ball.setMoveDelta(new Point(xMoveDelta, ballMoveDelta.y));
+	    ballPos.setLocation(rightFront - ballSize.width, ballPos.y);
 	}
     }
 
-    private boolean inYBounds(final Point position, final Dimension size, final Paddle paddle) {
+    private boolean inPaddleY(final Paddle paddle, final Point ballPos, final Dimension ballSize) {
 	final Point paddlePos = paddle.getPosition();
-	return position.getY() + size.getHeight() > paddlePos.getY()
-		&& position.getY() < paddlePos.getY() + paddle.getSize().getHeight();
+	return ballPos.y + ballSize.height > paddlePos.y && ballPos.y < paddlePos.y + paddle.getSize().height;
     }
 }

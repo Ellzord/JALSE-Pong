@@ -1,6 +1,5 @@
 package pong.actions;
 
-import static jalse.attributes.Attributes.newTypeOf;
 import jalse.actions.Action;
 import jalse.actions.ActionContext;
 import jalse.entities.Entity;
@@ -8,20 +7,12 @@ import jalse.entities.Entity;
 import java.awt.Dimension;
 import java.awt.Point;
 
-import pong.entities.Paddle;
 import pong.entities.Table;
 
 public class MoveElements implements Action<Entity> {
 
-    private static int inBounds(final int value, final int min, final int max) {
-	int newValue = value;
-	if (newValue < min) {
-	    newValue = min;
-	}
-	if (newValue > max) {
-	    newValue = max;
-	}
-	return newValue;
+    private static int bounded(final int value, final int min, final int max) {
+	return value < min ? min : value > max ? max : value;
     }
 
     @Override
@@ -30,25 +21,22 @@ public class MoveElements implements Action<Entity> {
 	final Dimension tableSize = table.getSize();
 	// Move all elements
 	table.streamElements().forEach(element -> {
-	    final Point position = element.getPosition();
 	    final Point moveDelta = element.getMoveDelta();
+	    if (moveDelta.x == 0 && moveDelta.y == 0) {
+		// No movement
+		return;
+	    }
+
+	    // Original
+	    final Point position = element.getPosition();
 	    final Dimension elementSize = element.getSize();
 
-	    final int x = inBounds(position.x + moveDelta.x, 0, tableSize.width - elementSize.width);
-	    int y = position.y + moveDelta.y;
-	    if (element.isMarkedAsType(Paddle.class)) {
-		// Keep paddles in y bounds
-		y = inBounds(y, 0, tableSize.height - elementSize.height);
-	    }
+	    // Calculate bounded x & y
+	    final int x = bounded(position.x + moveDelta.x, 0, tableSize.width - elementSize.width);
+	    final int y = bounded(position.y + moveDelta.y, 0, tableSize.height - elementSize.height);
 
-	    final Point newPosition = new Point(x, y);
-
-	    // Check position changed
-	    if (!newPosition.equals(position)) {
-		position.setLocation(newPosition);
-		// Signal change
-		element.fireAttributeChanged("position", newTypeOf(Point.class));
-	    }
+	    // New position
+	    element.setPosition(new Point(x, y));
 	});
     }
 }

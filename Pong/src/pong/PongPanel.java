@@ -1,7 +1,6 @@
 package pong;
 
 import static jalse.JALSEBuilder.buildManualJALSE;
-import static jalse.attributes.Attributes.newTypeOf;
 import jalse.JALSE;
 
 import java.awt.Color;
@@ -83,13 +82,13 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	    jalse.resume();
 
 	    // Check winner
-	    final Ball ball = getTable().getBall();
+	    final Table table = getTable();
+	    final Ball ball = table.getBall();
 	    final Point ballPos = ball.getPosition();
-	    final Dimension ballSize = ball.getSize();
-	    if (ballPos.getX() <= 0) {
+	    if (ballPos.x <= 0) {
 		newGame = true;
 		getScoreBoard().rightWins();
-	    } else if (ballPos.getX() + ballSize.getWidth() >= getTable().getSize().getWidth()) {
+	    } else if (ballPos.x + ball.getSize().width >= table.getSize().width) {
 		newGame = true;
 		getScoreBoard().leftWins();
 	    }
@@ -107,27 +106,25 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	// Create table
 	final Table table = jalse.newEntity(Table.ID, Table.class);
 	table.setSize(new Dimension(700, 500));
-	// Move the elements
-	table.scheduleForActor(new MoveElements(), 0, 1000 / 60, TimeUnit.MILLISECONDS);
+	table.scheduleForActor(new MoveElements(), 0, 1, TimeUnit.MILLISECONDS);
 
 	// Create paddles
-	final Dimension paddleSize = new Dimension(15, 80);
-	final int paddleSpeed = 25;
 	final Paddle left = table.newEntity(Paddle.LEFT_ID, Paddle.class);
-	left.setSize(paddleSize);
-	left.setSpeed(paddleSpeed);
+	left.setSize(new Dimension(15, 80));
+	left.setSpeed(20);
 	left.stopMoving();
 	final Paddle right = table.newEntity(Paddle.RIGHT_ID, Paddle.class);
-	right.setSize(paddleSize);
-	right.setSpeed(paddleSpeed);
+	right.setSize(new Dimension(15, 80));
+	right.setSpeed(20);
 	right.stopMoving();
 
 	// Create ball
 	final Ball ball = table.newEntity(Ball.ID, Ball.class);
 	ball.setSize(new Dimension(20, 20));
-	ball.setSpeed(5);
+	ball.setSpeed(4);
+	ball.setMaxSpeed(20);
 	ball.stopMoving();
-	ball.addAttributeListener("position", newTypeOf(Point.class), new BounceBall());
+	ball.addAttributeListener(TableElement.POSITION_TYPE, new BounceBall());
     }
 
     private ScoreBoard getScoreBoard() {
@@ -140,38 +137,36 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(final KeyEvent e) {
-	final Table t = getTable();
 	switch (e.getKeyCode()) {
 	case KeyEvent.VK_UP:
-	    t.getRightPaddle().moveUp();
+	    getTable().getRightPaddle().moveUp();
 	    break;
 	case KeyEvent.VK_DOWN:
-	    t.getRightPaddle().moveDown();
+	    getTable().getRightPaddle().moveDown();
 	    break;
 	case KeyEvent.VK_W:
-	    t.getLeftPaddle().moveUp();
+	    getTable().getLeftPaddle().moveUp();
 	    break;
 	case KeyEvent.VK_S:
-	    t.getLeftPaddle().moveDown();
+	    getTable().getLeftPaddle().moveDown();
 	    break;
 	}
     }
 
     @Override
     public void keyReleased(final KeyEvent e) {
-	final Table t = getTable();
 	switch (e.getKeyCode()) {
 	case KeyEvent.VK_UP:
-	    t.getRightPaddle().stopMoving();
+	    getTable().getRightPaddle().stopMoving();
 	    break;
 	case KeyEvent.VK_DOWN:
-	    t.getRightPaddle().stopMoving();
+	    getTable().getRightPaddle().stopMoving();
 	    break;
 	case KeyEvent.VK_W:
-	    t.getLeftPaddle().stopMoving();
+	    getTable().getLeftPaddle().stopMoving();
 	    break;
 	case KeyEvent.VK_S:
-	    t.getLeftPaddle().stopMoving();
+	    getTable().getLeftPaddle().stopMoving();
 	    break;
 	case KeyEvent.VK_P:
 	    paused = !paused;
@@ -184,8 +179,7 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
     }
 
     @Override
-    public void keyTyped(final KeyEvent e) {
-    }
+    public void keyTyped(final KeyEvent e) {}
 
     @Override
     protected void paintComponent(final Graphics g) {
@@ -197,10 +191,12 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	    return;
 	}
 
+	// Table data
+	final Table table = getTable();
+	final Dimension tableSize = table.getSize();
+
 	// White on black colour scheme
 	g.setColor(Color.WHITE);
-
-	final Dimension tableSize = getTable().getSize();
 
 	// Draw half-way line
 	for (int y = 0; y < tableSize.height; y += tableSize.height / 20) {
@@ -211,15 +207,16 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	g.setFont(SCORE_FONT);
 	final int scoreXOffSet = tableSize.width / 8;
 	final int scoreYOff = tableSize.height / 8;
-	drawCentredString(g, getScoreBoard().getLeftScore().toString(), tableSize.width / 2 - scoreXOffSet, scoreYOff);
-	drawCentredString(g, getScoreBoard().getRightScore().toString(), tableSize.width / 2 + scoreXOffSet, scoreYOff);
+	final ScoreBoard board = getScoreBoard();
+	drawCentredString(g, board.getLeftScore().toString(), tableSize.width / 2 - scoreXOffSet, scoreYOff);
+	drawCentredString(g, board.getRightScore().toString(), tableSize.width / 2 + scoreXOffSet, scoreYOff);
 
 	// Draw paddles
-	drawElement(g, getTable().getLeftPaddle());
-	drawElement(g, getTable().getRightPaddle());
+	drawElement(g, table.getLeftPaddle());
+	drawElement(g, table.getRightPaddle());
 
 	// Draw ball
-	drawElement(g, getTable().getBall());
+	drawElement(g, table.getBall());
 
 	// Draw paused
 	if (paused) {
@@ -231,18 +228,15 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	g.dispose();
     }
 
-    private void resetScore() {
-	ScoreBoard board = getScoreBoard();
-	board.setLeftScore(0);
-	board.setRightScore(0);
-	board.setLastWinner(ThreadLocalRandom.current().nextBoolean() ? Paddle.LEFT_ID : Paddle.RIGHT_ID);
-    }
-
     private void resetBall() {
-	final Ball ball = getTable().getBall();
-	final Dimension tableSize = getTable().getSize();
+	final Table table = getTable();
+	final Ball ball = table.getBall();
+
+	final Dimension tableSize = table.getSize();
 	final Dimension ballSize = ball.getSize();
+
 	ball.setPosition(new Point(tableSize.width / 2 - ballSize.width / 2, tableSize.height / 2 - ballSize.height / 2));
+
 	if (Paddle.LEFT_ID.equals(getScoreBoard().getLastWinner())) {
 	    ball.randomMoveLeft();
 	} else {
@@ -251,15 +245,27 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
     }
 
     private void resetLeftPaddle() {
-	final Paddle left = getTable().getLeftPaddle();
-	final Dimension tableSize = getTable().getSize();
+	final Table table = getTable();
+	final Paddle left = table.getLeftPaddle();
+	final Dimension tableSize = table.getSize();
+
 	left.setPosition(new Point(0, tableSize.height / 2 - left.getSize().height / 2));
     }
 
     private void resetRightPaddle() {
-	final Paddle right = getTable().getRightPaddle();
-	final Dimension tableSize = getTable().getSize();
+	final Table table = getTable();
+	final Paddle right = table.getRightPaddle();
+
+	final Dimension tableSize = table.getSize();
 	final Dimension paddleSize = right.getSize();
+
 	right.setPosition(new Point(tableSize.width - paddleSize.width, tableSize.height / 2 - paddleSize.height / 2));
+    }
+
+    private void resetScore() {
+	final ScoreBoard board = getScoreBoard();
+	board.setLeftScore(0);
+	board.setRightScore(0);
+	board.setLastWinner(ThreadLocalRandom.current().nextBoolean() ? Paddle.LEFT_ID : Paddle.RIGHT_ID);
     }
 }
