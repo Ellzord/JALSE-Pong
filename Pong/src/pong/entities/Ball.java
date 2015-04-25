@@ -15,13 +15,13 @@ public interface Ball extends TableElement {
     Integer getMaxSpeed();
 
     default void randomMoveLeft() {
-	final int speed = getSpeed();
-	setMoveDelta(new Point(-speed, ThreadLocalRandom.current().nextBoolean() ? -speed : speed));
+	final int speed = getSpeedIncrement();
+	setMoveDelta(new Point(-(speed * 2), ThreadLocalRandom.current().nextBoolean() ? -speed : speed));
     }
 
     default void randomMoveRight() {
-	final int speed = getSpeed();
-	setMoveDelta(new Point(speed, ThreadLocalRandom.current().nextBoolean() ? -speed : speed));
+	final int speedInc = getSpeedIncrement();
+	setMoveDelta(new Point(speedInc * 2, ThreadLocalRandom.current().nextBoolean() ? -speedInc : speedInc));
     }
 
     @SetAttribute("maxSpeed")

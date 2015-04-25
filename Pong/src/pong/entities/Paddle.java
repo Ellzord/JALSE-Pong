@@ -10,10 +10,10 @@ public interface Paddle extends TableElement {
     UUID RIGHT_ID = UUID.randomUUID();
 
     default void moveDown() {
-	setMoveDelta(new Point(0, getSpeed()));
+	setMoveDelta(new Point(0, getSpeedIncrement()));
     }
 
     default void moveUp() {
-	setMoveDelta(new Point(0, -getSpeed()));
+	setMoveDelta(new Point(0, -getSpeedIncrement()));
     }
 }

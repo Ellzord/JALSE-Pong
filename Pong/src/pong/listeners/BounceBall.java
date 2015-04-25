@@ -24,14 +24,9 @@ public class BounceBall extends AttributeAdapter<Point> {
 	final Point ballPos = event.getValue();
 	final Point ballMoveDelta = ball.getMoveDelta();
 
-	// Off top
-	if (ballPos.y == 0) {
-	    ball.setMoveDelta(new Point(ballMoveDelta.x, -ballMoveDelta.y));
-	    return;
-	}
-
-	// Hit bottom
-	if (ballPos.y + ballSize.height == tableSize.height) {
+	// Off top or bottom
+	if (ballPos.y == 0 || ballPos.y + ballSize.height == tableSize.height) {
+	    // Inverse ball Y velocity
 	    ball.setMoveDelta(new Point(ballMoveDelta.x, -ballMoveDelta.y));
 	    return;
 	}
@@ -40,8 +35,11 @@ public class BounceBall extends AttributeAdapter<Point> {
 	final Paddle left = table.getLeftPaddle();
 	final double leftFront = left.getSize().width;
 	if (ballPos.x <= leftFront && inPaddleY(left, ballPos, ballSize)) {
-	    final int xMoveDelta = Math.min(ball.getMaxSpeed(), -ballMoveDelta.x + ball.getSpeed());
-	    ball.setMoveDelta(new Point(xMoveDelta, ballMoveDelta.y));
+	    // Inverse and speed up X velocity
+	    final int xMoveDelta = Math.min(ball.getMaxSpeed(), -ballMoveDelta.x + ball.getSpeedIncrement());
+	    // Set new move delta with new X and Y
+	    ball.setMoveDelta(new Point(xMoveDelta, getYCausedByPaddle(left, ball)));
+	    // Reset to in front of paddle
 	    ballPos.setLocation(leftFront, ballPos.y);
 	    return;
 	}
@@ -50,9 +48,62 @@ public class BounceBall extends AttributeAdapter<Point> {
 	final Paddle right = table.getRightPaddle();
 	final double rightFront = tableSize.width - right.getSize().width;
 	if (ballPos.x + ballSize.width >= rightFront && inPaddleY(right, ballPos, ballSize)) {
-	    final int xMoveDelta = Math.max(-ball.getMaxSpeed(), -ballMoveDelta.x - ball.getSpeed());
-	    ball.setMoveDelta(new Point(xMoveDelta, ballMoveDelta.y));
+	    // Inverse and speed up X velocity
+	    final int xMoveDelta = Math.max(-ball.getMaxSpeed(), -ballMoveDelta.x - ball.getSpeedIncrement());
+	    // Set new move delta with new X and Y
+	    ball.setMoveDelta(new Point(xMoveDelta, getYCausedByPaddle(right, ball)));
+	    // Reset to in front of paddle
 	    ballPos.setLocation(rightFront - ballSize.width, ballPos.y);
+	}
+    }
+
+    private int getYCausedByPaddle(final Paddle paddle, final Ball ball) {
+	final Point ballPos = ball.getPosition();
+	final Point paddlePos = paddle.getPosition();
+	int ballYMoveDelta = ball.getMoveDelta().y;
+	final int paddleYMoveDelta = paddle.getMoveDelta().y;
+	boolean movingUp = false;
+	boolean movingDown = false;
+
+	// Paddle direction
+	if (paddleYMoveDelta < 0) {
+	    movingUp = true;
+	} else if (paddleYMoveDelta > 0) {
+	    movingDown = true;
+	}
+
+	// Hit top corner
+	if (ballPos.y < paddlePos.y) {
+	    if (ballYMoveDelta > 0) {
+		// Inverse direction
+		ballYMoveDelta = -ballYMoveDelta;
+	    }
+	    return Math.max(-ball.getMaxSpeed(), ballYMoveDelta - ball.getSpeedIncrement() / 2);
+	}
+	// Hit bottom corner
+	else if (ballPos.y + ball.getSize().height > paddlePos.y + paddle.getSize().height) {
+	    if (ballYMoveDelta < 0) {
+		// Inverse direction
+		ballYMoveDelta = -ballYMoveDelta;
+	    }
+	    return Math.min(ball.getMaxSpeed(), ballYMoveDelta + ball.getSpeedIncrement() / 2);
+	}
+	// Hit centre paddle
+	else {
+	    // Hitting inverse direction moving ball
+	    if (ballYMoveDelta < 0 && movingDown || ballYMoveDelta > 0 && movingUp) {
+		// Inverse direction
+		ballYMoveDelta = -ballYMoveDelta;
+	    }
+	    // Speed up if moving up
+	    if (movingUp) {
+		ballYMoveDelta -= ball.getSpeedIncrement() / 4;
+	    }
+	    // Speed up if moving down
+	    else if (movingDown) {
+		ballYMoveDelta += ball.getSpeedIncrement() / 4;
+	    }
+	    return ballYMoveDelta;
 	}
     }
 

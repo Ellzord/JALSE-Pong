@@ -111,18 +111,18 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	// Create paddles
 	final Paddle left = table.newEntity(Paddle.LEFT_ID, Paddle.class);
 	left.setSize(new Dimension(15, 80));
-	left.setSpeed(20);
+	left.setSpeedIncrement(20);
 	left.stopMoving();
 	final Paddle right = table.newEntity(Paddle.RIGHT_ID, Paddle.class);
 	right.setSize(new Dimension(15, 80));
-	right.setSpeed(20);
+	right.setSpeedIncrement(20);
 	right.stopMoving();
 
 	// Create ball
 	final Ball ball = table.newEntity(Ball.ID, Ball.class);
 	ball.setSize(new Dimension(20, 20));
-	ball.setSpeed(4);
-	ball.setMaxSpeed(20);
+	ball.setSpeedIncrement(4);
+	ball.setMaxSpeed(24);
 	ball.stopMoving();
 	ball.addAttributeListener(TableElement.POSITION_TYPE, new BounceBall());
     }
@@ -235,8 +235,10 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	final Dimension tableSize = table.getSize();
 	final Dimension ballSize = ball.getSize();
 
+	// Centre ball
 	ball.setPosition(new Point(tableSize.width / 2 - ballSize.width / 2, tableSize.height / 2 - ballSize.height / 2));
 
+	// Work out what side to serve to
 	if (Paddle.LEFT_ID.equals(getScoreBoard().getLastWinner())) {
 	    ball.randomMoveLeft();
 	} else {
@@ -249,6 +251,7 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	final Paddle left = table.getLeftPaddle();
 	final Dimension tableSize = table.getSize();
 
+	// Centre paddle
 	left.setPosition(new Point(0, tableSize.height / 2 - left.getSize().height / 2));
     }
 
@@ -259,6 +262,7 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	final Dimension tableSize = table.getSize();
 	final Dimension paddleSize = right.getSize();
 
+	// Centre paddle
 	right.setPosition(new Point(tableSize.width - paddleSize.width, tableSize.height / 2 - paddleSize.height / 2));
     }
 
@@ -266,6 +270,7 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	final ScoreBoard board = getScoreBoard();
 	board.setLeftScore(0);
 	board.setRightScore(0);
+	// Pick a random last winner
 	board.setLastWinner(ThreadLocalRandom.current().nextBoolean() ? Paddle.LEFT_ID : Paddle.RIGHT_ID);
     }
 }

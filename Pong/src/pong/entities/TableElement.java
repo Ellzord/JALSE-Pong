@@ -22,8 +22,8 @@ public interface TableElement extends Entity {
     @GetAttribute("size")
     Dimension getSize();
 
-    @GetAttribute("speed")
-    Integer getSpeed();
+    @GetAttribute("speedIncrement")
+    Integer getSpeedIncrement();
 
     @SetAttribute("moveDelta")
     void setMoveDelta(Point delta);
@@ -34,8 +34,8 @@ public interface TableElement extends Entity {
     @SetAttribute("size")
     void setSize(Dimension size);
 
-    @SetAttribute("speed")
-    void setSpeed(Integer speed);
+    @SetAttribute("speedIncrement")
+    void setSpeedIncrement(Integer speed);
 
     default void stopMoving() {
 	setMoveDelta(new Point(0, 0));
