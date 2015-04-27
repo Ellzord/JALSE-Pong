@@ -15,14 +15,15 @@ public class BounceBall extends AttributeAdapter<Point> {
 
     @Override
     public void attributeAdded(final AttributeEvent<Point> event) {
+	// Ball data
 	final Ball ball = ((Entity) event.getContainer()).asType(Ball.class);
-	final Table table = ((Entity) ball.getContainer()).asType(Table.class);
-
-	final Dimension ballSize = ball.getSize();
-	final Dimension tableSize = table.getSize();
-
 	final Point ballPos = event.getValue();
+	final Dimension ballSize = ball.getSize();
 	final Point ballMoveDelta = ball.getMoveDelta();
+	
+	// Table data
+	final Table table = ((Entity) ball.getContainer()).asType(Table.class);
+	final Dimension tableSize = table.getSize();
 
 	// Off top or bottom
 	if (ballPos.y == 0 || ballPos.y + ballSize.height == tableSize.height) {
@@ -58,14 +59,18 @@ public class BounceBall extends AttributeAdapter<Point> {
     }
 
     private int getYCausedByPaddle(final Paddle paddle, final Ball ball) {
+	// Ball data
 	final Point ballPos = ball.getPosition();
-	final Point paddlePos = paddle.getPosition();
 	int ballYMoveDelta = ball.getMoveDelta().y;
+	
+	// Paddle data
+	final Point paddlePos = paddle.getPosition();
 	final int paddleYMoveDelta = paddle.getMoveDelta().y;
-	boolean movingUp = false;
-	boolean movingDown = false;
+
 
 	// Paddle direction
+	boolean movingUp = false;
+	boolean movingDown = false;
 	if (paddleYMoveDelta < 0) {
 	    movingUp = true;
 	} else if (paddleYMoveDelta > 0) {
@@ -109,6 +114,6 @@ public class BounceBall extends AttributeAdapter<Point> {
 
     private boolean inPaddleY(final Paddle paddle, final Point ballPos, final Dimension ballSize) {
 	final Point paddlePos = paddle.getPosition();
-	return ballPos.y + ballSize.height > paddlePos.y && ballPos.y < paddlePos.y + paddle.getSize().height;
+	return ballPos.y + ballSize.height >= paddlePos.y && ballPos.y <= paddlePos.y + paddle.getSize().height;
     }
 }

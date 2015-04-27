@@ -28,15 +28,17 @@ public class MoveElements implements Action<Entity> {
 	    }
 
 	    // Original
-	    final Point position = element.getPosition();
+	    final Point elementPos = element.getPosition();
 	    final Dimension elementSize = element.getSize();
 
 	    // Calculate bounded x & y
-	    final int x = bounded(position.x + moveDelta.x, 0, tableSize.width - elementSize.width);
-	    final int y = bounded(position.y + moveDelta.y, 0, tableSize.height - elementSize.height);
+	    final int x = bounded(elementPos.x + moveDelta.x, 0, tableSize.width - elementSize.width);
+	    final int y = bounded(elementPos.y + moveDelta.y, 0, tableSize.height - elementSize.height);
 
-	    // New position
-	    element.setPosition(new Point(x, y));
+	    if (elementPos.x != x || elementPos.y != y) {
+		// Update if changed
+		element.setPosition(new Point(x, y));
+	    }
 	});
     }
 }
