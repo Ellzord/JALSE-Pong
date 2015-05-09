@@ -1,7 +1,7 @@
 package pong.listeners;
 
 import jalse.entities.Entity;
-import jalse.listeners.AttributeAdapter;
+import jalse.listeners.AttributeListener;
 import jalse.listeners.AttributeEvent;
 
 import java.awt.Dimension;
@@ -11,7 +11,7 @@ import pong.entities.Ball;
 import pong.entities.Paddle;
 import pong.entities.Table;
 
-public class BounceBall extends AttributeAdapter<Point> {
+public class BounceBall implements AttributeListener<Point> {
 
     @Override
     public void attributeAdded(final AttributeEvent<Point> event) {
@@ -20,7 +20,7 @@ public class BounceBall extends AttributeAdapter<Point> {
 	final Point ballPos = event.getValue();
 	final Dimension ballSize = ball.getSize();
 	final Point ballMoveDelta = ball.getMoveDelta();
-	
+
 	// Table data
 	final Table table = ((Entity) ball.getContainer()).asType(Table.class);
 	final Dimension tableSize = table.getSize();
@@ -62,11 +62,10 @@ public class BounceBall extends AttributeAdapter<Point> {
 	// Ball data
 	final Point ballPos = ball.getPosition();
 	int ballYMoveDelta = ball.getMoveDelta().y;
-	
+
 	// Paddle data
 	final Point paddlePos = paddle.getPosition();
 	final int paddleYMoveDelta = paddle.getMoveDelta().y;
-
 
 	// Paddle direction
 	boolean movingUp = false;
