@@ -25,10 +25,10 @@ public interface Table extends Entity {
 	return getEntityAsType(Paddle.RIGHT_ID, Paddle.class);
     }
 
-    @GetAttribute("size")
+    @GetAttribute
     Dimension getSize();
 
-    @SetAttribute("size")
+    @SetAttribute
     void setSize(Dimension size);
 
     @StreamEntities

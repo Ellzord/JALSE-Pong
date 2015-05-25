@@ -10,13 +10,13 @@ public interface ScoreBoard extends Entity {
 
     UUID ID = UUID.randomUUID();
 
-    @GetAttribute("lastWinner")
+    @GetAttribute
     UUID getLastWinner();
 
-    @GetAttribute("leftScore")
+    @GetAttribute
     Integer getLeftScore();
 
-    @GetAttribute("rightScore")
+    @GetAttribute
     Integer getRightScore();
 
     default void leftWins() {
@@ -29,12 +29,12 @@ public interface ScoreBoard extends Entity {
 	setLastWinner(Paddle.RIGHT_ID);
     }
 
-    @SetAttribute("lastWinner")
+    @SetAttribute
     void setLastWinner(UUID lastWinner);
 
-    @SetAttribute("leftScore")
+    @SetAttribute
     void setLeftScore(Integer score);
 
-    @SetAttribute("rightScore")
+    @SetAttribute
     void setRightScore(Integer score);
 }

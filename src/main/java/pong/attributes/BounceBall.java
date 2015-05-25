@@ -1,8 +1,8 @@
-package pong.listeners;
+package pong.attributes;
 
 import jalse.entities.Entity;
-import jalse.listeners.AttributeListener;
-import jalse.listeners.AttributeEvent;
+import jalse.attributes.AttributeListener;
+import jalse.attributes.AttributeEvent;
 
 import java.awt.Dimension;
 import java.awt.Point;

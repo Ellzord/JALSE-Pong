@@ -13,28 +13,28 @@ public interface TableElement extends Entity {
 
     NamedAttributeType<Point> POSITION_TYPE = newNamedTypeOf("position", Point.class);
 
-    @GetAttribute("moveDelta")
+    @GetAttribute
     Point getMoveDelta();
 
-    @GetAttribute("position")
+    @GetAttribute
     Point getPosition();
 
-    @GetAttribute("size")
+    @GetAttribute
     Dimension getSize();
 
-    @GetAttribute("speedIncrement")
+    @GetAttribute
     Integer getSpeedIncrement();
 
-    @SetAttribute("moveDelta")
+    @SetAttribute
     void setMoveDelta(Point delta);
 
-    @SetAttribute("position")
+    @SetAttribute
     void setPosition(Point position);
 
-    @SetAttribute("size")
+    @SetAttribute
     void setSize(Dimension size);
 
-    @SetAttribute("speedIncrement")
+    @SetAttribute
     void setSpeedIncrement(Integer speed);
 
     default void stopMoving() {

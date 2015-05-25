@@ -11,7 +11,7 @@ public interface Ball extends TableElement {
 
     UUID ID = UUID.randomUUID();
 
-    @GetAttribute("maxSpeed")
+    @GetAttribute
     Integer getMaxSpeed();
 
     default void randomMoveLeft() {
@@ -24,6 +24,6 @@ public interface Ball extends TableElement {
 	setMoveDelta(new Point(speedInc * 2, ThreadLocalRandom.current().nextBoolean() ? -speedInc : speedInc));
     }
 
-    @SetAttribute("maxSpeed")
+    @SetAttribute
     void setMaxSpeed(Integer maxSpeed);
 }

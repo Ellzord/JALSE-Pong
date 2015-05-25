@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -19,12 +20,12 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import pong.actions.MoveElements;
+import pong.attributes.BounceBall;
 import pong.entities.Ball;
 import pong.entities.Paddle;
 import pong.entities.ScoreBoard;
 import pong.entities.Table;
 import pong.entities.TableElement;
-import pong.listeners.BounceBall;
 
 @SuppressWarnings("serial")
 public class PongPanel extends JPanel implements ActionListener, KeyListener {
@@ -223,9 +224,9 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	    g.setFont(PAUSED_FONT);
 	    drawCentredString(g, "PAUSED", tableSize.width / 2, tableSize.height / 4);
 	}
-
-	// Clean up
-	g.dispose();
+	
+	// Sync (Linux fix)
+	Toolkit.getDefaultToolkit().sync();
     }
 
     private void resetBall() {
