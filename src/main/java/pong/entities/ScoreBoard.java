@@ -19,18 +19,24 @@ public interface ScoreBoard extends Entity {
     @GetAttribute
     Integer getRightScore();
 
+    @GetAttribute
+    Boolean isLeftLastWinner();
+
     default void leftWins() {
 	setLeftScore(getLeftScore() + 1);
-	setLastWinner(Paddle.LEFT_ID);
+	setLeftLastWinner(true);
     }
 
     default void rightWins() {
 	setRightScore(getRightScore() + 1);
-	setLastWinner(Paddle.RIGHT_ID);
+	setLeftLastWinner(false);
     }
 
     @SetAttribute
     void setLastWinner(UUID lastWinner);
+
+    @SetAttribute
+    void setLeftLastWinner(Boolean leftLastWinner);
 
     @SetAttribute
     void setLeftScore(Integer score);

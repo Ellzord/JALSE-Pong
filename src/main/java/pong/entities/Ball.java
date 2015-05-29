@@ -4,12 +4,9 @@ import jalse.entities.annotations.GetAttribute;
 import jalse.entities.annotations.SetAttribute;
 
 import java.awt.Point;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public interface Ball extends TableElement {
-
-    UUID ID = UUID.randomUUID();
 
     @GetAttribute
     Integer getMaxSpeed();

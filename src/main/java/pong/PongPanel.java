@@ -110,17 +110,17 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	table.scheduleForActor(new MoveElements(), 0, 1, TimeUnit.MILLISECONDS);
 
 	// Create paddles
-	final Paddle left = table.newEntity(Paddle.LEFT_ID, Paddle.class);
+	final Paddle left = table.newLeftPaddle();
 	left.setSize(new Dimension(15, 80));
 	left.setSpeedIncrement(20);
 	left.stopMoving();
-	final Paddle right = table.newEntity(Paddle.RIGHT_ID, Paddle.class);
+	final Paddle right = table.newRightPaddle();
 	right.setSize(new Dimension(15, 80));
 	right.setSpeedIncrement(20);
 	right.stopMoving();
 
 	// Create ball
-	final Ball ball = table.newEntity(Ball.ID, Ball.class);
+	final Ball ball = table.newBall();
 	ball.setSize(new Dimension(20, 20));
 	ball.setSpeedIncrement(4);
 	ball.setMaxSpeed(24);
@@ -224,7 +224,7 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	    g.setFont(PAUSED_FONT);
 	    drawCentredString(g, "PAUSED", tableSize.width / 2, tableSize.height / 4);
 	}
-	
+
 	// Sync (Linux fix)
 	Toolkit.getDefaultToolkit().sync();
     }
@@ -240,7 +240,7 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	ball.setPosition(new Point(tableSize.width / 2 - ballSize.width / 2, tableSize.height / 2 - ballSize.height / 2));
 
 	// Work out what side to serve to
-	if (Paddle.LEFT_ID.equals(getScoreBoard().getLastWinner())) {
+	if (getScoreBoard().isLeftLastWinner()) {
 	    ball.randomMoveLeft();
 	} else {
 	    ball.randomMoveRight();
@@ -272,6 +272,6 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	board.setLeftScore(0);
 	board.setRightScore(0);
 	// Pick a random last winner
-	board.setLastWinner(ThreadLocalRandom.current().nextBoolean() ? Paddle.LEFT_ID : Paddle.RIGHT_ID);
+	board.setLeftLastWinner(ThreadLocalRandom.current().nextBoolean());
     }
 }
