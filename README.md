@@ -17,8 +17,8 @@ DOWN | Moves right paddle down
 P | Pauses the game
 SPACE | Resets the game
 
-### Screenshot
-![Pong screenshot](screenshot.png)
+### Screen capture
+![Pong screen capture](screencapture.gif)
 
 ### More
 See the [Wiki](https://github.com/Ellzord/JALSE/wiki) for more information.
