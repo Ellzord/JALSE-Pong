@@ -1,12 +1,11 @@
 package pong.attributes;
 
-import jalse.attributes.AttributeEvent;
-import jalse.attributes.AttributeListener;
-import jalse.entities.Entity;
-
 import java.awt.Dimension;
 import java.awt.Point;
 
+import jalse.attributes.AttributeEvent;
+import jalse.attributes.AttributeListener;
+import jalse.entities.Entity;
 import pong.entities.Ball;
 import pong.entities.Paddle;
 import pong.entities.Table;

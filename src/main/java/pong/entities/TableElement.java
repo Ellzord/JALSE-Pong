@@ -1,13 +1,14 @@
 package pong.entities;
 
 import static jalse.attributes.Attributes.newNamedTypeOf;
+
+import java.awt.Dimension;
+import java.awt.Point;
+
 import jalse.attributes.NamedAttributeType;
 import jalse.entities.Entity;
 import jalse.entities.annotations.GetAttribute;
 import jalse.entities.annotations.SetAttribute;
-
-import java.awt.Dimension;
-import java.awt.Point;
 
 public interface TableElement extends Entity {
 
@@ -23,7 +24,7 @@ public interface TableElement extends Entity {
     Dimension getSize();
 
     @GetAttribute
-    Integer getSpeedIncrement();
+    int getSpeedIncrement();
 
     @SetAttribute
     void setMoveDelta(Point delta);
@@ -35,7 +36,7 @@ public interface TableElement extends Entity {
     void setSize(Dimension size);
 
     @SetAttribute
-    void setSpeedIncrement(Integer speed);
+    void setSpeedIncrement(int speed);
 
     default void stopMoving() {
 	setMoveDelta(new Point(0, 0));

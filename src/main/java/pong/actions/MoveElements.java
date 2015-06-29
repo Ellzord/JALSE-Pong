@@ -1,12 +1,11 @@
 package pong.actions;
 
-import jalse.actions.Action;
-import jalse.actions.ActionContext;
-import jalse.entities.Entity;
-
 import java.awt.Dimension;
 import java.awt.Point;
 
+import jalse.actions.Action;
+import jalse.actions.ActionContext;
+import jalse.entities.Entity;
 import pong.entities.Table;
 
 public class MoveElements implements Action<Entity> {

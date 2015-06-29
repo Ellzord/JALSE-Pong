@@ -1,15 +1,15 @@
 package pong.entities;
 
-import jalse.entities.annotations.GetAttribute;
-import jalse.entities.annotations.SetAttribute;
-
 import java.awt.Point;
 import java.util.concurrent.ThreadLocalRandom;
+
+import jalse.entities.annotations.GetAttribute;
+import jalse.entities.annotations.SetAttribute;
 
 public interface Ball extends TableElement {
 
     @GetAttribute
-    Integer getMaxSpeed();
+    int getMaxSpeed();
 
     default void randomMoveLeft() {
 	final int speed = getSpeedIncrement();
@@ -22,5 +22,5 @@ public interface Ball extends TableElement {
     }
 
     @SetAttribute
-    void setMaxSpeed(Integer maxSpeed);
+    void setMaxSpeed(int maxSpeed);
 }

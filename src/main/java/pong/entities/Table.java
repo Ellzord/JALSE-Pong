@@ -1,5 +1,9 @@
 package pong.entities;
 
+import java.awt.Dimension;
+import java.util.UUID;
+import java.util.stream.Stream;
+
 import jalse.entities.Entity;
 import jalse.entities.annotations.EntityID;
 import jalse.entities.annotations.GetAttribute;
@@ -7,10 +11,6 @@ import jalse.entities.annotations.GetEntity;
 import jalse.entities.annotations.NewEntity;
 import jalse.entities.annotations.SetAttribute;
 import jalse.entities.annotations.StreamEntities;
-
-import java.awt.Dimension;
-import java.util.UUID;
-import java.util.stream.Stream;
 
 public interface Table extends Entity {
 

@@ -1,10 +1,10 @@
 package pong.entities;
 
+import java.util.UUID;
+
 import jalse.entities.Entity;
 import jalse.entities.annotations.GetAttribute;
 import jalse.entities.annotations.SetAttribute;
-
-import java.util.UUID;
 
 public interface ScoreBoard extends Entity {
 
@@ -14,13 +14,13 @@ public interface ScoreBoard extends Entity {
     UUID getLastWinner();
 
     @GetAttribute
-    Integer getLeftScore();
+    int getLeftScore();
 
     @GetAttribute
-    Integer getRightScore();
+    int getRightScore();
 
     @GetAttribute
-    Boolean isLeftLastWinner();
+    boolean isLeftLastWinner();
 
     default void leftWins() {
 	setLeftScore(getLeftScore() + 1);
@@ -36,11 +36,11 @@ public interface ScoreBoard extends Entity {
     void setLastWinner(UUID lastWinner);
 
     @SetAttribute
-    void setLeftLastWinner(Boolean leftLastWinner);
+    void setLeftLastWinner(boolean leftLastWinner);
 
     @SetAttribute
-    void setLeftScore(Integer score);
+    void setLeftScore(int score);
 
     @SetAttribute
-    void setRightScore(Integer score);
+    void setRightScore(int score);
 }

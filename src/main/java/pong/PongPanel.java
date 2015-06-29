@@ -1,8 +1,5 @@
 package pong;
 
-import static jalse.JALSEBuilder.buildManualJALSE;
-import jalse.JALSE;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -19,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import jalse.DefaultJALSE;
+import jalse.JALSE;
 import pong.actions.MoveElements;
 import pong.attributes.BounceBall;
 import pong.entities.Ball;
@@ -53,7 +52,7 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	paused = true;
 	newGame = true;
 	// Manually ticked JALSE
-	jalse = buildManualJALSE();
+	jalse = new DefaultJALSE.Builder().setManualEngine().build();
 	// Create data model
 	createEntities();
 	// Size to table size
@@ -209,8 +208,8 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	final int scoreXOffSet = tableSize.width / 8;
 	final int scoreYOff = tableSize.height / 8;
 	final ScoreBoard board = getScoreBoard();
-	drawCentredString(g, board.getLeftScore().toString(), tableSize.width / 2 - scoreXOffSet, scoreYOff);
-	drawCentredString(g, board.getRightScore().toString(), tableSize.width / 2 + scoreXOffSet, scoreYOff);
+	drawCentredString(g, String.valueOf(board.getLeftScore()), tableSize.width / 2 - scoreXOffSet, scoreYOff);
+	drawCentredString(g, String.valueOf(board.getRightScore()), tableSize.width / 2 + scoreXOffSet, scoreYOff);
 
 	// Draw paddles
 	drawElement(g, table.getLeftPaddle());
@@ -237,7 +236,8 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	final Dimension ballSize = ball.getSize();
 
 	// Centre ball
-	ball.setPosition(new Point(tableSize.width / 2 - ballSize.width / 2, tableSize.height / 2 - ballSize.height / 2));
+	ball.setPosition(
+		new Point(tableSize.width / 2 - ballSize.width / 2, tableSize.height / 2 - ballSize.height / 2));
 
 	// Work out what side to serve to
 	if (getScoreBoard().isLeftLastWinner()) {
